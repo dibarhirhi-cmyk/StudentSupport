@@ -1,8 +1,9 @@
-const express = require('express');
-const mongoose = require('mongoose');
-const cors = require('cors');
+const express = require('express'); 
+const mongoose = require('mongoose'); 
+const cors = require('cors'); 
 const User = require('./models/User');
 const Ticket = require('./models/Ticket');
+const bcrypt = require("bcryptjs");
 
 const app = express();
 app.use(express.json());
@@ -17,17 +18,22 @@ mongoose.connect('mongodb://127.0.0.1:27017/studentSupport', {
 app.post("/register", async (req, res) => {
     try {
         const { name, email, password } = req.body;
- 
-        const newUser = new User({ 
-            name, 
-            email, 
-            password,
+
+        const hashedPassword = await bcrypt.hash(password, 10);
+        
+        const newUser = new User({
+            name,
+            email,
+            password: hashedPassword,
             role: 'student'
         });
         
         await newUser.save();
+
         res.json({ message: "User registered successfully!" });
+
     } catch (error) {
+        console.log(error);
         res.status(500).json({ error: error.message });
     }
 });
@@ -35,23 +41,32 @@ app.post("/register", async (req, res) => {
 app.post("/login", async (req, res) => {
     try {
         const { email, password } = req.body;
-        const user = await User.findOne({ email, password }); 
-        
-        if (user) {
-            res.json({ 
-                message: "Login successful", 
-                user: { 
-                    id: user._id, 
-                    name: user.name, 
-                    email: user.email,
-                    role: user.role || 'student'
-                } 
-            });
-        } else {
-            res.status(401).json({ error: "Invalid email or password" });
+
+        const user = await User.findOne({ email });
+
+        if (!user) {
+            return res.status(401).json({ error: "User not found" });
         }
+
+        const isMatch = await bcrypt.compare(password, user.password);
+
+        if (!isMatch) {
+            return res.status(401).json({ error: "Invalid password" });
+        }
+
+        res.json({ 
+            message: "Login successful", 
+            user: { 
+                id: user._id, 
+                name: user.name, 
+                email: user.email,
+                role: user.role || 'student'
+            } 
+        });
+
     } catch (error) {
-        res.status(500).json({ error: error.message });
+        console.log(error);
+        res.status(500).json({ message: "Login error" });
     }
 });
 
