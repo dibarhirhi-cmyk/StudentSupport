@@ -1,70 +1,180 @@
-# Getting Started with Create React App
+# Student Support Ticket System
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+A full-stack web application that allows students to submit support requests/complains and staff members to manage and resolve them. The system includes user authentication, ticket tracking, AI powered assistant and AI analysis engine .
 
-## Available Scripts
+## Overview
 
-In the project directory, you can run:
+This project is a student support system that allows users to submit and manage support requests. In addition to standard ticketing functionality, the system includes AI-assisted tools that help students write clearer requests and assist staff in quickly analysing and prioritising issues.
 
-### `npm start`
+The application consists of a Node.js and Express backend with a MongoDB database, and a React frontend for user interaction.
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+## Features
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+- User registration and login with secure password hashing
+- Role-based access (student and staff)
 
-### `npm test`
+Student functionality:
+- Submit support tickets
+- View personal ticket history
+- Automatically format requests into a professional message using an AI-style helper
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+Staff functionality:
+- View all submitted tickets
+- Filter tickets by category
+- Search tickets by student name or subject
+- Mark tickets as resolved with note
 
-### `npm run build`
+AI-assisted features:
+- Automatic formalization of student requests into structured, professional messages
+- Basic issue analysis tool for staff that Assigns priority levels (e.g. urgent, medium, low)
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+- Ticket status tracking (Pending / Resolved)
+- Categorization (General, Accommodation, Teaching, Facilities)
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+## Tech Stack
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+Backend:
 
-### `npm run eject`
+* Node.js
+* Express
+* MongoDB with Mongoose
+* bcryptjs for password hashing
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+Frontend:
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+* React
+* Axios
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+## Project Structure
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+```
+project-root/
+├── backend/
+ ├── models/
+│   ├── User.js
+│   └── Ticket.js
+├── server.js
+│
+│
+├── frontend
+ ├── src/
+│   ├── App.js
+│   ├── Dashboard.js
+│   ├── AdminDashboard.js
+│   ├── Login.js
+│   ├── Register.js
+│   └── StaffLogin.js
+│
+├── package.json3
+└── README.md
+```
 
-## Learn More
+## Installation and Setup
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+### 1. Clone the repository
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+```
+git clone https://github.com/your-username/student-support-system.git
+cd student-support-system
+```
 
-### Code Splitting
+### 2. Install backend dependencies
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+```
+npm install
+```
 
-### Analyzing the Bundle Size
+### 3. Install frontend dependencies
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+install dependencies:
 
-### Making a Progressive Web App
+```
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+npm install
+```
 
-### Advanced Configuration
+### 4. Start MongoDB
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+Ensure MongoDB is running locally at:
 
-### Deployment
+```
+mongodb://127.0.0.1:27017/studentSupport
+```
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+### 5. Run the backend server
 
-### `npm run build` fails to minify
+```
+node server.js
+```
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+The backend runs on:
+
+```
+http://localhost:3001
+```
+
+### 6. Run the frontend
+
+
+```
+npm start
+```
+
+The frontend runs on:
+
+```
+http://localhost:3000
+```
+
+## API Endpoints
+
+### Authentication
+
+POST /register
+Creates a new user account.
+
+POST /login
+Authenticates a user and returns user data.
+
+### Tickets
+
+POST /tickets
+Creates a new support ticket.
+
+GET /tickets
+Retrieves all tickets.
+
+GET /tickets/user/:userId
+Retrieves tickets for a specific user.
+
+PUT /tickets/:id/resolve
+Marks a ticket as resolved and updates its status.
+
+## User Roles
+
+Student:
+
+* Can register and log in
+* Can create tickets
+* Can view their own tickets
+
+Staff:
+
+* Can access the admin dashboard
+* Can view all tickets
+* Can filter and search tickets
+* Can resolve tickets and add notes
+
+## Notes
+
+* Passwords are securely hashed using bcrypt before storage.
+* Access to staff features is controlled on the frontend based on user role.
+
+## Future Improvements
+
+* Add backend authorization middleware
+* Improve input validation and error handling
+* Enhance UI/UX design
+* Add email notifications for ticket updates
+* Store and manage AI-generated summaries more robustly
+
